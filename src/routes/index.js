@@ -1,23 +1,13 @@
-// filepath: src/routes/index.js
-const IndexController = require('../controllers/index');
 const CalendarController = require('../controllers/calendar');
 const TaskController = require('../controllers/task');
 const UserController = require('../controllers/users');
 const passport = require('passport');
 
 function setRoutes(app) {
-  const indexController = new IndexController();
   const calendarController = new CalendarController();
   const taskController = new TaskController();
   const userController = new UserController();
 
-  app.get('/', indexController.getIndex.bind(indexController));
-
-  app.post(
-    '/calendars',
-    passport.authenticate('jwt', { session: false }),
-    calendarController.createCalendar.bind(calendarController)
-  );
   app.get(
     '/calendars',
     passport.authenticate('jwt', { session: false }),
