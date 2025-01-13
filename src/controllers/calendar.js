@@ -15,7 +15,7 @@ class CalendarController {
     }
   }
 
-  getCalendars(req, res) {
+  getAllCalendars(req, res) {
     res.send(calendarDatabase);
   }
 }

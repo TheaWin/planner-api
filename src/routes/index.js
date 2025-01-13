@@ -13,7 +13,7 @@ function setRoutes(app) {
   );
   app.get(
     '/calendars',
-    calendarController.getCalendars.bind(calendarController)
+    calendarController.getAllCalendars.bind(calendarController)
   );
 }
 
