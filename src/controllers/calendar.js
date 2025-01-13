@@ -18,6 +18,17 @@ class CalendarController {
   getAllCalendars(req, res) {
     res.send(calendarDatabase);
   }
+
+  getCalendar(req, res) {
+    const calendar = calendarDatabase.find(
+      (cal) => cal.calendarName === req.params.calendarName
+    );
+    if (calendar) {
+      res.send(calendar);
+    } else {
+      res.status(404).send('Calendar not found');
+    }
+  }
 }
 
 module.exports = CalendarController;
