@@ -160,6 +160,45 @@ class TaskController {
     }
   }
 
+  async getTaskByWeek(req, res) {
+    try {
+      const dueDate = req.params.dueDate;
+      if (!dueDate) {
+        return res.status(400).send('Date is required');
+      }
+
+      const userTimezoneOffset = new Date().getTimezoneOffset() * 60000;
+      const localDueDate = new Date(
+        new Date(dueDate).getTime() - userTimezoneOffset
+      );
+
+      const dayOfWeek = localDueDate.getUTCDay();
+      const diffToMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
+      const startOfWeekUTC = new Date(localDueDate);
+      startOfWeekUTC.setUTCDate(localDueDate.getUTCDate() + diffToMonday);
+      startOfWeekUTC.setUTCHours(0, 0, 0, 0);
+
+      const endOfWeekUTC = new Date(startOfWeekUTC);
+      endOfWeekUTC.setUTCDate(startOfWeekUTC.getUTCDate() + 6);
+      endOfWeekUTC.setUTCHours(23, 59, 59, 999);
+
+      const tasks = await task.find({
+        dueDate: {
+          $gte: startOfWeekUTC,
+          $lt: endOfWeekUTC,
+        },
+      });
+
+      if (tasks.length > 0) {
+        res.status(200).json(tasks);
+      } else {
+        res.status(404).send('No tasks found for the given week');
+      }
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
+
   async toggleTaskCompletion(req, res) {
     try {
       const taskId = req.params.taskId;

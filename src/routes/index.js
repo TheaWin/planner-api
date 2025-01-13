@@ -49,6 +49,10 @@ function setRoutes(app) {
     '/tasks/date/:dueDate',
     taskController.getTaskByDate.bind(taskController)
   );
+  app.get(
+    '/tasks/week/:dueDate',
+    taskController.getTaskByWeek.bind(taskController)
+  );
   app.patch(
     '/tasks/:taskId',
     taskController.toggleTaskCompletion.bind(taskController)
