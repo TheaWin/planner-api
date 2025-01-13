@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 const calendar = require('../models/calendar');
-const user = require('../models/user');
+const user = require('../models/users');
 
 class CalendarController {
   async createCalendar(req, res) {
