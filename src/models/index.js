@@ -1,23 +1,23 @@
 class Planner {
-    constructor(data) {
-        this.data = data;
-    }
+  constructor(data) {
+    this.data = data;
+  }
 
-    save() {
-        // Logic to save planner data
-    }
+  save() {
+    // Logic to save planner data
+  }
 
-    find() {
-        // Logic to find planner data
-    }
+  find() {
+    // Logic to find planner data
+  }
 
-    update(id, newData) {
-        // Logic to update planner data
-    }
+  update(id, newData) {
+    // Logic to update planner data
+  }
 
-    delete(id) {
-        // Logic to delete planner data
-    }
+  delete(id) {
+    // Logic to delete planner data
+  }
 }
 
 module.exports = Planner;
