@@ -1,8 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const setRoutes = require('./routes/index');
+const connectDB = require('./config/db');
 
 const app = express();
+
+// Connect to MongoDB
+connectDB();
 
 // Middleware
 app.use(express.json());
