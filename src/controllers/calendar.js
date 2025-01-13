@@ -14,6 +14,10 @@ class CalendarController {
       res.status(201).send(newCalendar);
     }
   }
+
+  getCalendars(req, res) {
+    res.send(calendarDatabase);
+  }
 }
 
 module.exports = CalendarController;

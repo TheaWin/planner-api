@@ -11,6 +11,10 @@ function setRoutes(app) {
     '/calendars',
     calendarController.createCalendar.bind(calendarController)
   );
+  app.get(
+    '/calendars',
+    calendarController.getCalendars.bind(calendarController)
+  );
 }
 
 module.exports = setRoutes;
