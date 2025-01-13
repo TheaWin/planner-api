@@ -112,6 +112,22 @@ class TaskController {
       res.status(500).send(err.message);
     }
   }
+
+  async deleteTask(req, res) {
+    try {
+      const deletedTask = await task.findOneAndDelete({
+        _id: req.params.taskId,
+      });
+
+      if (!deletedTask) {
+        return res.status(404).send('Task not found');
+      }
+
+      res.send('Task deleted');
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
 }
 
 module.exports = TaskController;
