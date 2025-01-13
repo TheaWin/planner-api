@@ -2,12 +2,14 @@
 const IndexController = require('../controllers/index');
 const CalendarController = require('../controllers/calendar');
 const TaskController = require('../controllers/task');
+const UserController = require('../controllers/users');
 const passport = require('passport');
 
 function setRoutes(app) {
   const indexController = new IndexController();
   const calendarController = new CalendarController();
   const taskController = new TaskController();
+  const userController = new UserController();
 
   app.get('/', indexController.getIndex.bind(indexController));
 
@@ -81,6 +83,17 @@ function setRoutes(app) {
     '/tasks/:taskId',
     passport.authenticate('jwt', { session: false }),
     taskController.deleteTask.bind(taskController)
+  );
+
+  app.get(
+    '/users',
+    passport.authenticate('jwt', { session: false }),
+    userController.getUserDetails.bind(userController)
+  );
+  app.delete(
+    '/users/calendars/:calendarId',
+    passport.authenticate('jwt', { session: false }),
+    userController.deleteCalendar.bind(userController)
   );
 }
 
