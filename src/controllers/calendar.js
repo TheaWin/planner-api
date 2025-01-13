@@ -1,4 +1,3 @@
-const uuid = require('uuid');
 const calendar = require('../models/calendar');
 const user = require('../models/users');
 
