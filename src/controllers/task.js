@@ -1,6 +1,19 @@
 const task = require('../models/task');
 
 class TaskController {
+  /**
+   * Creates a new task.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} req.body - The request body.
+   * @param {string} req.body.taskName - The name of the task.
+   * @param {string} [req.body.taskDescription] - The description of the task.
+   * @param {string} [req.body.dueDate] - The due date of the task.
+   * @param {string} req.body.calendarName - The name of the calendar.
+   * @param {string} [req.body.priority] - The priority of the task.
+   * @param {Object} res - The response object.
+   * @returns {Promise<void>} - A promise that resolves when the task is created.
+   */
   async createTask(req, res) {
     const {
       taskName,
@@ -32,6 +45,14 @@ class TaskController {
     }
   }
 
+  /**
+   * Retrieves all tasks from the database.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
+   * @returns {Promise<void>} - A promise that resolves when the tasks are retrieved and sent.
+   * @throws {Error} - If there is an error retrieving the tasks, a 500 status code and error message are sent.
+   */
   async getAllTasks(req, res) {
     try {
       const tasks = await task.find();
@@ -41,6 +62,18 @@ class TaskController {
     }
   }
 
+  /**
+   * Retrieves tasks by their complete or partial name.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} req.params - The parameters from the request.
+   * @param {string} req.params.taskName - The name of the task to search for.
+   * @param {Object} res - The response object.
+   * @returns {object} 200 - The task object if found.
+   * @returns {object} 400 - Error message if task name is missing.
+   * @returns {object} 404 - Error message if task not found.
+   * @returns {Error} 500 - Internal Server Error
+   */
   async getTaskByName(req, res) {
     try {
       const taskName = req.params.taskName;
@@ -63,6 +96,17 @@ class TaskController {
     }
   }
 
+  /**
+   * Retrieves a task by its ID.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} req.params - The parameters of the request.
+   * @param {string} req.params.taskId - The ID of the task to retrieve.
+   * @param {Object} res - The response object.
+   * @returns {object} 200 - The task object if found.
+   * @returns {object} 404 - Error message if task object not found.
+   * @returns {Error} 500 - Internal Server Error
+   */
   async getTaskById(req, res) {
     try {
       const taskId = req.params.taskId;
@@ -78,6 +122,24 @@ class TaskController {
     }
   }
 
+  /**
+   * Edit an existing task.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} req.body - The request body.
+   * @param {string} req.body.taskName - The name of the task.
+   * @param {string} req.body.taskDescription - The description of the task.
+   * @param {string} req.body.dueDate - The due date of the task.
+   * @param {string} req.body.calendarName - The name of the calendar.
+   * @param {string} req.body.priority - The priority of the task.
+   * @param {boolean} req.body.completed - The completion status of the task.
+   * @param {Object} req.params - The request parameters.
+   * @param {string} req.params.taskId - The ID of the task to be edited.
+   * @param {Object} res - The response object.
+   * @returns {object} 200 - The updated task object if successfully edited.
+   * @returns {object} 404 - Error message if task object not found.
+   * @returns {Error} 500 - Internal Server Error
+   */
   async editTask(req, res) {
     try {
       const {
@@ -112,6 +174,18 @@ class TaskController {
     }
   }
 
+  /**
+   * Retrieves tasks by calendar name.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} req.params - The parameters from the request.
+   * @param {string} req.params.calendarName - The name of the calendar to find tasks for.
+   * @param {Object} res - The response object.
+   * @returns {object} 200 - The task object if found.
+   * @returns {object} 404 - Error message if tasks not found.
+   * @returns {Error} 500 - Internal Server Error
+   * @throws {Error} - If an error occurs while retrieving the tasks.
+   */
   async getTaskByCalendar(req, res) {
     try {
       const calendarName = req.params.calendarName;
@@ -127,6 +201,19 @@ class TaskController {
     }
   }
 
+  /**
+   * Retrieves tasks by a specific due date.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} req.params - The request parameters.
+   * @param {string} req.params.dueDate - The due date to filter tasks by.
+   * @param {Object} res - The response object.
+   * @returns {object} 200 - Returns all tasks for requested due date.
+   * @returns {object} 400 - Error message if due date is missing.
+   * @returns {object} 404 - Error message if there is no tasks found.
+   * @returns {Error} 500 - Internal Server Error
+   * @throws {Error} - If an error occurs while retrieving tasks.
+   */
   async getTaskByDate(req, res) {
     try {
       const dueDate = req.params.dueDate;
@@ -159,6 +246,19 @@ class TaskController {
     }
   }
 
+  /**
+   * Retrieves tasks for a given week based on the provided due date.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} req.params - The request parameters.
+   * @param {string} req.params.dueDate - The due date to find tasks for the week.
+   * @param {Object} res - The response object.
+   * @returns {object} 200 - Returns all the tasks object from a given week based on the due date.
+   * @returns {object} 400 - Error message if due date is missing.
+   * @returns {object} 404 - Error message if no tasks found.
+   * @returns {Error} 500 - Internal Server Error
+   * @throws {Error} - If an error occurs while retrieving tasks.
+   */
   async getTaskByWeek(req, res) {
     try {
       const dueDate = req.params.dueDate;
@@ -198,6 +298,17 @@ class TaskController {
     }
   }
 
+  /**
+   * Toggles the completion status of a task.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} req.params - The parameters of the request.
+   * @param {string} req.params.taskId - The ID of the task to toggle.
+   * @param {Object} res - The response object.
+   * @returns {object} 200 - Returns true or false based on initial value.
+   * @returns {object} 404 - Error message if task not found.
+   * @returns {Error} 500 - Internal Server Error
+   */
   async toggleTaskCompletion(req, res) {
     try {
       const taskId = req.params.taskId;
@@ -219,6 +330,15 @@ class TaskController {
     }
   }
 
+  /**
+   * Deletes a task based on the provided task ID.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} req.params - The parameters of the request.
+   * @param {string} req.params.taskId - The ID of the task to be deleted.
+   * @param {Object} res - The response object.
+   * @returns {Promise<void>} - A promise that resolves when the task is deleted.
+   */
   async deleteTask(req, res) {
     try {
       const deletedTask = await task.findOneAndDelete({
