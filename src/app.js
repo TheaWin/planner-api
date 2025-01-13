@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const setRoutes = require('./routes/index');
 
 const app = express();
@@ -6,6 +7,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Initialize routes
 setRoutes(app);
