@@ -1,52 +1,85 @@
 const uuid = require('uuid');
-const calendarDatabase = require('../db/calendarDatabase');
+const calendar = require('../models/calendar');
 
 class CalendarController {
-  createCalendar(req, res) {
-    let newCalendar = req.body;
+  async createCalendar(req, res) {
+    const { calendarName } = req.body;
 
-    if (!newCalendar.calendarName) {
+    if (!calendarName) {
       return res.status(400).send('Calendar name is required');
-    } else {
-      newCalendar.calendarId = uuid.v4();
-      newCalendar.createdDate = new Date().toISOString();
-      calendarDatabase.push(newCalendar);
+    }
+
+    try {
+      const newCalendar = await calendar.create({ calendarName });
       res.status(201).send(newCalendar);
+    } catch (error) {
+      res.status(500).send(error.message);
     }
   }
 
-  getAllCalendars(req, res) {
-    res.send(calendarDatabase);
-  }
-
-  getCalendar(req, res) {
-    const calendar = calendarDatabase.find(
-      (cal) => cal.calendarName === req.params.calendarName
-    );
-    if (calendar) {
-      res.send(calendar);
-    } else {
-      res.status(404).send('Calendar not found');
+  async getAllCalendars(req, res) {
+    try {
+      const calendars = await calendar.find();
+      res.send(calendars);
+    } catch (err) {
+      res.status(500).send(err.message);
     }
   }
 
-  editCalendar(req, res) {
-    const calendar = calendarDatabase.find(
-      (cal) => cal.calendarName === req.params.calendarName
-    );
+  async getCalendar(req, res) {
+    try {
+      const foundCalendar = await calendar.findOne({
+        calendarName: req.params.calendarName,
+      });
 
-    if (!calendar) {
-      return res.status(404).send('Calendar not found');
+      if (foundCalendar) {
+        res.send(foundCalendar);
+      } else {
+        res.status(404).send('Calendar not found');
+      }
+    } catch (err) {
+      res.status(500).send(err.message);
     }
+  }
 
-    const updatedCalendar = req.body;
+  async editCalendar(req, res) {
+    try {
+      const { calendarName: newCalendarName } = req.body;
 
-    if (!updatedCalendar.calendarName) {
-      return res.status(400).send('New calendar name is required');
+      if (!newCalendarName) {
+        return res.status(400).send('New calendar name is required');
+      }
+
+      const updatedCalendar = await calendar.findOneAndUpdate(
+        { calendarName: req.params.calendarName },
+        { calendarName: newCalendarName },
+        { new: true }
+      );
+
+      if (!updatedCalendar) {
+        return res.status(404).send('Calendar not found');
+      }
+
+      res.send(updatedCalendar);
+    } catch (err) {
+      res.status(500).send(err.message);
     }
+  }
 
-    calendar.calendarName = updatedCalendar.calendarName;
-    res.send(calendar);
+  async deleteCalendar(req, res) {
+    try {
+      const deletedCalendar = await calendar.findOneAndDelete({
+        calendarName: req.params.calendarName,
+      });
+
+      if (!deletedCalendar) {
+        return res.status(404).send('Calendar not found');
+      }
+
+      res.send('Calendar deleted');
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
   }
 }
 

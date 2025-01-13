@@ -23,6 +23,10 @@ function setRoutes(app) {
     '/calendars/:calendarName',
     calendarController.editCalendar.bind(calendarController)
   );
+  app.delete(
+    '/calendars/:calendarName',
+    calendarController.deleteCalendar.bind(calendarController)
+  );
 }
 
 module.exports = setRoutes;
