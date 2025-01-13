@@ -42,6 +42,10 @@ function setRoutes(app) {
   );
   app.put('/tasks/:taskId', taskController.editTask.bind(taskController));
   app.delete('/tasks/:taskId', taskController.deleteTask.bind(taskController));
+  app.patch(
+    '/tasks/:taskId',
+    taskController.toggleTaskCompletion.bind(taskController)
+  );
 }
 
 module.exports = setRoutes;

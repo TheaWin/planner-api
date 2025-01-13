@@ -128,6 +128,27 @@ class TaskController {
       res.status(500).send(err.message);
     }
   }
+
+  async toggleTaskCompletion(req, res) {
+    try {
+      const taskId = req.params.taskId;
+      const taskToUpdate = await task.findById(taskId);
+
+      if (!taskToUpdate) {
+        return res.status(404).send('Task not found');
+      }
+
+      const updatedTask = await task.findOneAndUpdate(
+        { _id: taskId },
+        { completed: !taskToUpdate.completed },
+        { new: true }
+      );
+
+      res.send(updatedTask);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
 }
 
 module.exports = TaskController;
