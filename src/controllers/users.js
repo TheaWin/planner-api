@@ -14,25 +14,6 @@ class UserController {
       res.status(500).send(error.message);
     }
   }
-
-  async deleteCalendar(req, res) {
-    try {
-      const userDetails = await user.findById(req.user._id);
-      if (!userDetails) {
-        return res.status(404).send('User not found');
-      }
-
-      const calendarId = req.params.calendarId;
-      userDetails.calendars = userDetails.calendars.filter(
-        (cal) => cal.toString() !== calendarId
-      );
-
-      await userDetails.save();
-      res.status(200).send('Calendar deleted successfully');
-    } catch (error) {
-      res.status(500).send(error.message);
-    }
-  }
 }
 
 module.exports = UserController;

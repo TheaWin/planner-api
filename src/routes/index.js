@@ -86,11 +86,6 @@ function setRoutes(app) {
     passport.authenticate('jwt', { session: false }),
     userController.getUserDetails.bind(userController)
   );
-  app.delete(
-    '/users/calendars/:calendarId',
-    passport.authenticate('jwt', { session: false }),
-    userController.deleteCalendar.bind(userController)
-  );
 }
 
 module.exports = setRoutes;
