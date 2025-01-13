@@ -78,6 +78,40 @@ class TaskController {
       res.status(500).send(err.message);
     }
   }
+
+  async editTask(req, res) {
+    try {
+      const {
+        taskName,
+        taskDescription,
+        dueDate,
+        calendarName,
+        priority,
+        completed,
+      } = req.body;
+
+      const updatedTask = await task.findOneAndUpdate(
+        { _id: req.params.taskId },
+        {
+          taskName,
+          taskDescription,
+          dueDate,
+          calendarName,
+          priority,
+          completed,
+        },
+        { new: true }
+      );
+
+      if (!updatedTask) {
+        return res.status(404).send('Task not found');
+      }
+
+      res.send(updatedTask);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
 }
 
 module.exports = TaskController;

@@ -40,6 +40,7 @@ function setRoutes(app) {
     '/tasks/idsearch/:taskId',
     taskController.getTaskById.bind(taskController)
   );
+  app.put('/tasks/:taskId', taskController.editTask.bind(taskController));
 }
 
 module.exports = setRoutes;
