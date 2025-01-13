@@ -128,6 +128,38 @@ class TaskController {
     }
   }
 
+  async getTaskByDate(req, res) {
+    try {
+      const dueDate = req.params.dueDate;
+      if (!dueDate) {
+        return res.status(400).send('Date is required');
+      }
+
+      const userTimezoneOffset = new Date().getTimezoneOffset() * 60000;
+      const localDate = new Date(
+        new Date(dueDate).getTime() - userTimezoneOffset
+      );
+
+      const startOfDayUTC = new Date(localDate.setHours(0, 0, 0, 0));
+      const endOfDayUTC = new Date(localDate.setHours(23, 59, 59, 999));
+
+      const tasks = await task.find({
+        dueDate: {
+          $gte: startOfDayUTC,
+          $lt: endOfDayUTC,
+        },
+      });
+
+      if (tasks.length > 0) {
+        res.status(200).json(tasks);
+      } else {
+        res.status(404).send('No tasks found for the given date');
+      }
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
+
   async toggleTaskCompletion(req, res) {
     try {
       const taskId = req.params.taskId;
