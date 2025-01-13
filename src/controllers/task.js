@@ -113,17 +113,16 @@ class TaskController {
     }
   }
 
-  async deleteTask(req, res) {
+  async getTaskByCalendar(req, res) {
     try {
-      const deletedTask = await task.findOneAndDelete({
-        _id: req.params.taskId,
-      });
+      const calendarName = req.params.calendarName;
+      const foundTasks = await task.find({ calendarName });
 
-      if (!deletedTask) {
-        return res.status(404).send('Task not found');
+      if (foundTasks.length > 0) {
+        res.send(foundTasks);
+      } else {
+        res.status(404).send('Tasks not found');
       }
-
-      res.send('Task deleted');
     } catch (err) {
       res.status(500).send(err.message);
     }
@@ -145,6 +144,22 @@ class TaskController {
       );
 
       res.send(updatedTask);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
+
+  async deleteTask(req, res) {
+    try {
+      const deletedTask = await task.findOneAndDelete({
+        _id: req.params.taskId,
+      });
+
+      if (!deletedTask) {
+        return res.status(404).send('Task not found');
+      }
+
+      res.send('Task deleted');
     } catch (err) {
       res.status(500).send(err.message);
     }
