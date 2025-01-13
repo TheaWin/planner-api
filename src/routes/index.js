@@ -8,6 +8,12 @@ function setRoutes(app) {
   const taskController = new TaskController();
   const userController = new UserController();
 
+  app.post(
+    '/calendars',
+    passport.authenticate('jwt', { session: false }),
+    calendarController.createCalendar.bind(calendarController)
+  );
+
   app.get(
     '/calendars',
     passport.authenticate('jwt', { session: false }),
