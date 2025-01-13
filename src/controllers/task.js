@@ -32,6 +32,15 @@ class TaskController {
       res.status(500).send(error.message);
     }
   }
+
+  async getAllTasks(req, res) {
+    try {
+      const tasks = await task.find();
+      res.send(tasks);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
 }
 
 module.exports = TaskController;

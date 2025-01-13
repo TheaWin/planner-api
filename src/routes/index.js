@@ -31,6 +31,7 @@ function setRoutes(app) {
   );
 
   app.post('/tasks', taskController.createTask.bind(taskController));
+  app.get('/tasks', taskController.getAllTasks.bind(taskController));
 }
 
 module.exports = setRoutes;
