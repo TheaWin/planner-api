@@ -87,6 +87,12 @@ class CalendarController {
         return res.status(404).send('Calendar not found');
       }
 
+      await user.findByIdAndUpdate(
+        req.user._id,
+        { $pull: { calendars: deletedCalendar._id } },
+        { new: true, useFindAndModify: false }
+      );
+
       res.send('Calendar deleted');
     } catch (err) {
       res.status(500).send(err.message);
