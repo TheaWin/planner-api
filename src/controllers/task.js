@@ -41,6 +41,43 @@ class TaskController {
       res.status(500).send(err.message);
     }
   }
+
+  async getTaskByName(req, res) {
+    try {
+      const taskName = req.params.taskName;
+
+      if (!taskName || taskName.trim() === '') {
+        return res.status(400).send('Task name is required');
+      }
+
+      const foundTasks = await task.find({
+        taskName: { $regex: taskName, $options: 'i' },
+      });
+
+      if (foundTasks.length > 0) {
+        res.status(200).json(foundTasks);
+      } else {
+        res.status(404).send('Task not found');
+      }
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
+
+  async getTaskById(req, res) {
+    try {
+      const taskId = req.params.taskId;
+      const foundTask = await task.findById(taskId);
+
+      if (foundTask) {
+        res.send(foundTask);
+      } else {
+        res.status(404).send('Task not found');
+      }
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
 }
 
 module.exports = TaskController;
