@@ -29,6 +29,25 @@ class CalendarController {
       res.status(404).send('Calendar not found');
     }
   }
+
+  editCalendar(req, res) {
+    const calendar = calendarDatabase.find(
+      (cal) => cal.calendarName === req.params.calendarName
+    );
+
+    if (!calendar) {
+      return res.status(404).send('Calendar not found');
+    }
+
+    const updatedCalendar = req.body;
+
+    if (!updatedCalendar.calendarName) {
+      return res.status(400).send('New calendar name is required');
+    }
+
+    calendar.calendarName = updatedCalendar.calendarName;
+    res.send(calendar);
+  }
 }
 
 module.exports = CalendarController;
